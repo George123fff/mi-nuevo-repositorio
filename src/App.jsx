@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Inicio from "./pages/Inicio";
 import BusquedaPage from "./pages/BusquedaPage";
@@ -16,6 +15,7 @@ function App() {
           <Link className="nav-link" to="/nuevo">Nuevo</Link>
         </div>
       </nav>
+
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/buscar" element={<BusquedaPage />} />
@@ -26,3 +26,4 @@ function App() {
 }
 
 export default App;
+

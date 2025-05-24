@@ -1,30 +1,56 @@
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
-import { restaurantes } from "../data";
-import RestauranteCard from "../components/RestauranteCard";
+function BusquedaPage() {
+  const [terminoBusqueda, setTerminoBusqueda] = useState("");
+  const [resultados, setResultados] = useState([]);
+  const [restaurantes, setRestaurantes] = useState([]);
 
-export default function BusquedaPage() {
-  const [busqueda, setBusqueda] = useState("");
+  useEffect(() => {
+    const datosGuardados = localStorage.getItem("restaurantes");
+    if (datosGuardados) {
+      setRestaurantes(JSON.parse(datosGuardados));
+    }
+  }, []);
 
-  const resultados = restaurantes.filter(r =>
-    r.nombre.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  const handleBuscar = (e) => {
+    e.preventDefault();
+    const filtrados = restaurantes.filter((restaurante) =>
+      restaurante.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase())
+    );
+    setResultados(filtrados);
+  };
 
   return (
     <div className="container mt-4">
       <h2>Búsqueda de Restaurantes</h2>
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Buscar por nombre"
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-      />
-      <div className="d-flex flex-wrap gap-3">
-        {resultados.map((r, i) => (
-          <RestauranteCard key={i} restaurante={r} />
-        ))}
-      </div>
+      <form onSubmit={handleBuscar} className="mb-3">
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Nombre del restaurante"
+            value={terminoBusqueda}
+            onChange={(e) => setTerminoBusqueda(e.target.value)}
+          />
+          <button className="btn btn-primary" type="submit">
+            Buscar
+          </button>
+        </div>
+      </form>
+
+      {resultados.length > 0 ? (
+        <ul className="list-group">
+          {resultados.map((restaurante, index) => (
+            <li key={index} className="list-group-item">
+              <strong>{restaurante.nombre}</strong> – {restaurante.ubicacion}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No se encontraron resultados.</p>
+      )}
     </div>
   );
 }
+
+export default BusquedaPage;
